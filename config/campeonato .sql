@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 19-11-2023 a las 22:31:10
+-- Tiempo de generación: 21-11-2023 a las 23:03:28
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -127,8 +127,6 @@ CREATE TABLE `modalidades` (
 
 INSERT INTO `modalidades` (`id_modalidad`, `nombre_modalidad`) VALUES
 (1, 'Batalla de Robots'),
-(5, 'Robots arduino'),
-(4, 'Soluciones computacionales'),
 (3, 'Soluciones Industriales'),
 (2, 'Vehículos Autónomos');
 
@@ -211,6 +209,40 @@ INSERT INTO `patrocinios` (`id_patrocinio`, `nombre_patrocinio`, `monto`) VALUES
 (4, 'Bronce', 'libre'),
 (5, 'Padrino', 'libre');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sesiones`
+--
+
+CREATE TABLE `sesiones` (
+  `id_sesion` int(13) NOT NULL,
+  `idUsuario` int(13) NOT NULL,
+  `fecha_de_caducidad` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `id_usuario` int(13) NOT NULL,
+  `cedula_usuario` int(8) NOT NULL,
+  `nombre_usuario` varchar(30) NOT NULL,
+  `clave_usuario` varchar(60) NOT NULL,
+  `rol_usuario` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id_usuario`, `cedula_usuario`, `nombre_usuario`, `clave_usuario`, `rol_usuario`) VALUES
+(1, 30975611, 'Admin', '$2b$10$2W5mM5eVKMWjbUlmGBOpzOSMH1DsOrp6dzFKUhJ8ZyAX8f2LgC5Fq', 'admin'),
+(2, 31975611, 'Editor', '$2b$10$6GbZre.MDZf1ColrctMUK.ARvZdxIEQwQdGY8kmtfGm8RAf6YfdUu', 'editor');
+
 --
 -- Índices para tablas volcadas
 --
@@ -269,6 +301,20 @@ ALTER TABLE `patrocinios`
   ADD UNIQUE KEY `nombre_patrocinio` (`nombre_patrocinio`);
 
 --
+-- Indices de la tabla `sesiones`
+--
+ALTER TABLE `sesiones`
+  ADD PRIMARY KEY (`id_sesion`),
+  ADD KEY `idUsuario` (`idUsuario`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `cedula_usuario` (`cedula_usuario`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -315,6 +361,18 @@ ALTER TABLE `patrocinios`
   MODIFY `id_patrocinio` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `sesiones`
+--
+ALTER TABLE `sesiones`
+  MODIFY `id_sesion` int(13) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id_usuario` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- Restricciones para tablas volcadas
 --
 
@@ -343,6 +401,12 @@ ALTER TABLE `padrinos`
 --
 ALTER TABLE `patrocinadores`
   ADD CONSTRAINT `idPatrocinio` FOREIGN KEY (`idPatrocinio`) REFERENCES `patrocinios` (`id_patrocinio`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `sesiones`
+--
+ALTER TABLE `sesiones`
+  ADD CONSTRAINT `idUsuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

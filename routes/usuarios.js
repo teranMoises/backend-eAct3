@@ -24,6 +24,7 @@ router.get('/:index', function(req, res, next){
 router.post('/crear', function(req, res, next){
   UsuarioController.registrar_usuario(req.body).then((resultado)=>{ //token
       //res.send(token)
+      console.log(req.body)
       res.send(resultado)
     }).catch((error)=>{
       res.status(error).send(error)
@@ -68,5 +69,14 @@ router.patch('/user_manager', checkRoot, function (req, res, next) {
       res.status(error).send(error);
     })
 });
+
+
+
+
+/*Views */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+
 
 module.exports = router;
