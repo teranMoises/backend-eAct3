@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Modalidad_Controller = require('../controllers/Modalidad_Controller');
+const { checkLogin, checkAdmin, checkRoot, checkDatetime } = require('../auth/auth');
 
 /* GET modalidades */
 router.get('/', function (req, res, next) {
@@ -24,7 +25,7 @@ router.get('/:index', function (req, res, next) {
         res.status(error.codigo).send(error.mensaje);
     })
 }); 
-router.post('/', function (req, res, next) {
+router.post('/', checkAdmin, function (req, res, next) {
     //console.log('en routes', req.body);
     Modalidad_Controller.ingresar_modalidad(req.body)
     .then((resultados) => {
