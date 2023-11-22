@@ -3,15 +3,20 @@ var jwt = require('jsonwebtoken');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const { Respuesta, validarClass } = require('./metodos');
 
 class UsuarioModel{
     mostrar_usuarios(){
         return new Promise((resolve, reject) => {
             connection.query('SELECT `id_usuario`, `cedula_usuario`, `nombre_usuario` FROM `usuarios`', function(err, rows, fields) {
                 if (err){
-                    reject(err)
+                    reject(new Respuesta(500, err, err))
                 }else {
-                    resolve(rows)  
+                    if(rows.length == 0){
+                        reject(new Respuesta(404, 'No existen usuarios registrados', rows))
+                    }else{
+                        resolve(rows)   
+                    }
                 }
             })
         })
@@ -20,7 +25,7 @@ class UsuarioModel{
         return new Promise((resolve, reject) => {
             connection.query('SELECT `id_usuario`, `cedula_usuario`, `nombre_usuario` FROM `usuarios` WHERE `id_usuario` = ?', id, function(err, rows, fields) {
                 if(err) {
-                    reject(err)
+                    reject(new Respuesta(500, err, err))
                 }else {
                     resolve(rows)  
                 }
@@ -39,12 +44,12 @@ class UsuarioModel{
                     if (error.errno == 1048) reject("No ingresó nungún dato en: " + error.sqlMessage.substring(7).replace(' cannot be null', ''));
                     reject(error);
                     console.error("Error SQL: ",error.sqlMessage);
-                };
+                }
                 if (results) {
                     console.log('ID CREADO:', results.insertId);
-                    resolve(results);
-                };
-            });
+                    resolve("Registro exitoso");
+                }
+            })
         }) 
     }
     login(usuario){
@@ -60,10 +65,11 @@ class UsuarioModel{
                         let rol = 'user'
                         if (results[0].rol_usuario) rol = results[0].rol_usuario;
 
-                        var token = jwt.sign({ nombre: results[0].nombre_usuario, id: results[0].cedula_usuario, rol: rol }, process.env.JWT_SECRET);
+                        var token = jwt.sign({ nombre: results[0].nombre_usuario, id: results[0].cedula_usuario, rol: rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
                         console.log(token);
-                        results[1] = token;
-                        resolve(results);
+                        //results[1] = token;
+                        let retorna = { id_usuario: results[0].id_usuario , nombre_usuario: results[0].nombre_usuario, cedula_usuario: results[0].cedula_usuario, rol_usuario: results[0].rol_usuario, token: token}
+                        resolve(retorna);
                     } else {
                         console.log('Clave errada');
                         reject('Clave errada');
@@ -72,7 +78,7 @@ class UsuarioModel{
                     console.log('Usuario no existe');
                     reject('No existe ningún usuario con la cédula indicada: ' + data.cedula_user);
                 }
-            });
+            })
         }) 
     }
     modificar_usuario(id, actualizar){
@@ -81,9 +87,17 @@ class UsuarioModel{
             actualizar.clave_usuario = bcrypt.hashSync(actualizar.clave_usuario, saltRounds);
             connection.query('UPDATE `usuarios` SET ? WHERE `id_usuario` = ?',[actualizar, id], function(err, rows, fields) {
                 if (err){
-                    reject(err)
+                    if (err.errno == 1048) reject("No ingresó nungún dato en: " + err.sqlMessage.substring(7).replace(' cannot be null', ''));
+                    reject(new Respuesta(500, err, err));
                 }else {
-                    resolve()  
+                    if (rows.affectedRows < 1) {
+                        console.error('El usuario "' + id + '" no existe');
+                        reject(new Respuesta(404, 'No existe ningún usuario con el ID indicado: ' + id, rows))
+                    } else if (rows.changedRows > 0) {
+                        resolve(new Respuesta(200, "Se ha actualizado exitosamente", rows));
+                    } else {
+                        reject(new Respuesta(200, 'No se modificó el usuario "' + id + '", debido a que los datos ingresados son iguales.', rows));
+                    }
                 }
             })
         }) 
@@ -92,9 +106,31 @@ class UsuarioModel{
         return new Promise((resolve, reject) => {
             connection.query('DELETE FROM `usuarios` WHERE `id_usuario` = ?', id, function(err, rows, fields) {
                 if (err){
-                    reject(err)
+                    reject(new Respuesta(500, err, err))
                 }else {
-                    resolve()  
+                    if (rows.affectedRows > 0) {
+                        resolve(new Respuesta(200, "Se ha eliminado exitosamente", rows));
+                    } else {
+                        reject(new Respuesta(404, 'No se eliminó el usuario "' + id + '". Es posible de que ya no exista.', rows));
+                    } 
+                }
+            })
+        })
+    }
+    cambiar_rol(usuario){ 
+        return new Promise((resolve, reject) => {
+            connection.query('UPDATE `usuarios` SET rol_usuario = ? WHERE cedula_usuario = ?', [usuario.rol_usuario, usuario.cedula_usuario], function (error, results, fields) {
+                if (error) reject(error);
+                if (results.affectedRows > 0) {
+                    console.log('consulta:', results);
+                    if (results.changedRows > 0) {
+                        resolve('Se ha modificado el usuario "' + usuario.cedula_usuario + '" a tipo "' + usuario.rol_usuario + '"');
+                    } else {
+                        resolve('El usuario "' + usuario.cedula_usuario + '"  ya es de tipo "' + usuario.rol_usuario + '"');
+                    }
+                } else {
+                    console.log('Usuario no existe');
+                    reject('No existe ningún usuario con la cédula indicada: ' + usuario.cedula_usuario);
                 }
             })
         })
