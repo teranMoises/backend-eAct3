@@ -31,6 +31,12 @@ router.post('/home/login', function(req, res, next) {
 });
 
 
+//Aquí esta la prueba
+
+router.get('/prueba', function(req, res, next) {
+  res.render('pruebas', { title: 'Express' });
+});
+
 
 
 module.exports = router;
