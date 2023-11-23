@@ -16,6 +16,28 @@ router.get('/', function (req, res, next) {
             res.status(error.codigo).send(error.mensaje);
         })
 });
+/* VIEWS */
+router.get('/nuevaModalidad',function(req,res, next){
+    Modalidad_Controller.ver_modalidad().then((resultados)=>{
+        let nombre_modalidad = resultados;
+        res.render('nuevaModalidad',{title: 'Crear una Modalidad', nombre_modalidad:nombre_modalidad});
+    }).catch((error)=>{
+        if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
+        else {res.status(500).send(error)}
+    })
+
+});
+/* VIEWS POST */
+router.post('/nuevaModalidad', function (req, res, next) {
+    //console.log('en routes', req.body);
+    Modalidad_Controller.ingresar_modalidad(req.body)
+    .then((resultados) => {
+        res.send(resultados.resultado);
+    })
+    .catch((error) => {
+        res.status(error.codigo).send(error.mensaje);
+    })
+});
 router.get('/:index', function (req, res, next) {
     Modalidad_Controller.ver_modalidad_y_categoria(req.params.index)
     .then((resultados) => {
