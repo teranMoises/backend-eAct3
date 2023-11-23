@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
 const Equipos_Controller = require('../controllers/Equipos_Controller')
+const { checkLogin, checkAdmin } = require('../auth/auth');
 
 /* GET */
 
-router.get('/', function (req, res, next) {
+router.get('/',checkAdmin, function (req, res, next) {
     Equipos_Controller.ver_equipos().then((resultados) => {
         res.json(resultados);
     }).catch((error) => {
@@ -14,7 +15,7 @@ router.get('/', function (req, res, next) {
 
 
 /* POST */
-router.post('/', function (req, res, next) {
+router.post('/',checkLogin, function (req, res, next) {
     Equipos_Controller.ingresar_equipo(req.body).then((inscripcion) => {
         Equipos_Controller.ingresar_inscripcion(inscripcion).then(() => {
             Equipos_Controller.ver_equipos().then((resultados) => {
@@ -31,7 +32,7 @@ router.post('/', function (req, res, next) {
 });
 
 /* DELETE */
-router.delete('/:index', function (req, res, next) {
+router.delete('/:index',checkAdmin, function (req, res, next) {
     Equipos_Controller.eliminar_equipo(req.params.index).then((resultados) => {
         res.status(resultados.codigo).send(resultados.mensaje);
     }).catch((error) => {
@@ -74,7 +75,7 @@ router.get('/verEquipo', function (req, res, next) {
 
 
 /*Editar equipo*/
-router.put('/editar_equipo/:editar', function (req, res, next) {
+router.put('/editar_equipo/:editar',checkLogin,function (req, res, next) {
     Equipos_Controller.editar_equipo(req.params.editar, req.body)
         .then((resultados) => {
             res.status(resultados.codigo).send(resultados.mensaje);
