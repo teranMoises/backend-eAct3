@@ -68,7 +68,7 @@ router.get('/verEquipo', checkAdminView, function (req, res, next) {
         if (resultados == null) { res.status(404).send("No se han registrado equipos") } else {
             let equipos = resultados;
             //console.table(equipos)
-            res.render('verEquipos', { title: 'Ingresar Equipo', equipos: equipos });
+            res.render('verEquipos', { title: 'Ingresar Equipo', tabla: equipos });
         };
     }).catch((error) => {
         res.status(500).send(error)
