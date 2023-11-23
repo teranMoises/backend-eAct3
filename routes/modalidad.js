@@ -56,6 +56,6 @@ router.post('/', checkAdmin, function (req, res, next) {
     .catch((error) => {
         res.status(error.codigo).send(error.mensaje);
     })
-});
+});  
 
 module.exports = router; 
