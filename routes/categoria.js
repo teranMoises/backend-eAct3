@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Categoria_Controller = require('../controllers/Categoria_Controller');
+const { checkLogin, checkAdmin, checkRoot, checkDatetime } = require('../auth/auth');
 
 /* GET  */
 router.get('/', function (req, res, next) {
@@ -12,7 +13,7 @@ router.get('/', function (req, res, next) {
 });
 
 /* POST */
-router.post('/', function (req, res, next) {
+router.post('/', checkAdmin, function (req, res, next) {
     Categoria_Controller.ingresar_categoria(req.body)
         .then(() => {
             Categoria_Controller.ver_categorias()
@@ -28,7 +29,7 @@ router.post('/', function (req, res, next) {
         })
 });
 
-router.get('/equipos/:index', function (req, res, next) {
+router.get('/equipos/:index', checkAdmin, function (req, res, next) {
     //console.log('CAT ROUTER:', req.params.index, req.body);
     Categoria_Controller.ver_equipos_por_categoria(req.params.index, null).then((resultados) => {
         res.json(resultados);
@@ -38,7 +39,7 @@ router.get('/equipos/:index', function (req, res, next) {
     })
 });
 
-router.get('/participantes', function (req, res, next) {
+router.get('/participantes', checkAdmin, function (req, res, next) {
     //console.log('CAT ROUTER:', req.params.index, req.body);
     Categoria_Controller.ver_equipos_por_categoria(null, req.body).then((resultados) => {
         res.json(resultados);
@@ -47,7 +48,7 @@ router.get('/participantes', function (req, res, next) {
     })
 });
 
-router.put('/:editar', function (req, res, next) {
+router.put('/:editar', checkAdmin, function (req, res, next) {
     //console.log('en routes', req.params.editar, req.body);
     Categoria_Controller.editar_categoria(req.params.editar, req.body)
         .then((resultados) => {
@@ -60,7 +61,7 @@ router.put('/:editar', function (req, res, next) {
         })
 });
 
-router.patch('/:editar', function (req, res, next) {
+router.patch('/:editar', checkAdmin, function (req, res, next) {
     //console.log('en routes', req.params.editar, req.body);
     Categoria_Controller.modificar_categoria(req.params.editar, req.body)
         .then((resultados) => {
@@ -73,7 +74,7 @@ router.patch('/:editar', function (req, res, next) {
         })
 });
 /* DELETE */
-router.delete('/:index', function (req, res, next) {
+router.delete('/:index', checkAdmin, function (req, res, next) {
     Categoria_Controller.eliminar_categoria(req.params.index).then((resultados)=>{
         res.status(resultados.codigo).send(resultados.mensaje);
     }).catch((error)=>{

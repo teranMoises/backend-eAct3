@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 const Patrocinador_Controller = require('../controllers/Patrocinador_Controller');
 const Equipos_Controller = require('../controllers/Equipos_Controller')
-
+const { checkLogin, checkAdmin, checkRoot, checkDatetime } = require('../auth/auth');
+const { checkLoginView, checkAdminView, checkRootView } = require('../auth/authViews')
+ 
 /* GET user. */
 
 router.get('/', function(req, res, next){
@@ -15,7 +17,7 @@ router.get('/', function(req, res, next){
 
 /* POST */
 
-router.post('/', function (req, res, next) {
+router.post('/', checkAdmin,function (req, res, next) {
    if(req.body.idPatrocinio == 5){  
       if(req.body.idEquipo != ""){
          Patrocinador_Controller.ingresar_patrocinador(req.body).then((resultado)=>{
@@ -49,7 +51,7 @@ router.post('/', function (req, res, next) {
 
 /* DELETE */
 
-router.delete('/:index', function (req ,res , next) {
+router.delete('/:index', checkAdmin,function (req ,res , next) {
    Patrocinador_Controller.eliminar_patrocinador(req.params.index).then((resultado)=>{
       res.json(resultado);
    }).catch((error)=>{
@@ -58,7 +60,7 @@ router.delete('/:index', function (req ,res , next) {
 })
 
 /* PUT */
-router.put('/:index', function (req, res, next) {
+router.put('/:index', checkAdmin,function (req, res, next) {
    Patrocinador_Controller.buscar_patrocinador(req.params.index).then((resultado)=>{
       Patrocinador_Controller.editar_patrocinador(resultado[0].idPatrocinio,req.params.index, req.body).then((resultado)=>{
          res.json(resultado);
@@ -73,7 +75,7 @@ router.put('/:index', function (req, res, next) {
 
 /* VIEWS */
 
-router.get('/nuevoPatrocinador', function (req, res, next) {
+router.get('/nuevoPatrocinador', checkAdminView , function (req, res, next) {
    Patrocinador_Controller.ver_patrocinios().then((resultados) => {
       Equipos_Controller.ver_equipos_sin_padrino().then((equipos) => {
          let patrocinios = resultados;
