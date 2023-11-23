@@ -26,8 +26,14 @@ router.get('/home/login', function(req, res, next) {
 });
 
 router.post('/home/login', function(req, res, next) {
-  res.render('./userViews/login', { title: 'Express' });
+  //res.render('./userViews/login', { title: 'Express' });
   let data = req.body;
+  UsuarioController.login(req.body).then((token)=>{ 
+    res.cookie("jwt", token.token, {maxAge: 3600000})
+    res.send("Bienvenido")
+  }).catch((error)=>{
+    res.status(error).send(error)
+  })
 });
 
 

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const Equipos_Controller = require('../controllers/Equipos_Controller')
 const { checkLogin, checkAdmin } = require('../auth/auth');
+const { checkLoginView, checkAdminView, checkRootView } = require('../auth/authViews')
 
 /* GET */
 
@@ -62,7 +63,7 @@ router.delete('/sin_categoria/:index/:index2',checkLogin,function (req, res, nex
 
 /* Views */
 
-router.get('/verEquipo', function (req, res, next) {
+router.get('/verEquipo', checkAdminView, function (req, res, next) {
     Equipos_Controller.ver_equipos_views().then((resultados) => {
         if (resultados == null) { res.status(404).send("No se han registrado equipos") } else {
             let equipos = resultados;

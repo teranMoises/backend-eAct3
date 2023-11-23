@@ -3,7 +3,8 @@ var router = express.Router();
 const Patrocinador_Controller = require('../controllers/Patrocinador_Controller');
 const Equipos_Controller = require('../controllers/Equipos_Controller')
 const { checkLogin, checkAdmin, checkRoot, checkDatetime } = require('../auth/auth');
-
+const { checkLoginView, checkAdminView, checkRootView } = require('../auth/authViews')
+ 
 /* GET user. */
 
 router.get('/', function(req, res, next){
@@ -74,7 +75,7 @@ router.put('/:index', checkAdmin,function (req, res, next) {
 
 /* VIEWS */
 
-router.get('/nuevoPatrocinador' , function (req, res, next) {
+router.get('/nuevoPatrocinador', checkAdminView , function (req, res, next) {
    Patrocinador_Controller.ver_patrocinios().then((resultados) => {
       Equipos_Controller.ver_equipos_sin_padrino().then((equipos) => {
          let patrocinios = resultados;
