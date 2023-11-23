@@ -28,6 +28,11 @@ class ModalidadController {
                 .catch((error) => { reject(error); })
         })
     }
+    poder_inscribir(){
+        return new Promise((resolve, reject) => {
+            Modalidad_Model.poder_inscribir().then((resultado)=>{resolve(resultado)}).catch((error)=>{reject(error)});
+        })
+    }
 }
 
 module.exports = new ModalidadController();
