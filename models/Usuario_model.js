@@ -57,7 +57,7 @@ class UsuarioModel{
             //usuario.clave_usuario = bcrypt.hashSync(usuario.clave_usuario, saltRounds);
             //console.log(usuario.clave_usuario)
             connection.query('SELECT * FROM `usuarios` WHERE cedula_usuario = ?', usuario.cedula_usuario , function (error, results, fields) {
-                if (error) reject(error);
+                if (error) {reject(error); return};
                 if (results[0]) {
                     console.log('consulta:', results);
                     if (bcrypt.compareSync(usuario.clave_usuario, results[0].clave_usuario)) {
@@ -76,7 +76,7 @@ class UsuarioModel{
                     }
                 } else {
                     console.log('Usuario no existe');
-                    reject('No existe ningún usuario con la cédula indicada: ' + data.cedula_user);
+                    reject('No existe ningún usuario con la cédula indicada: ' + usuario.cedula_usuario);
                 }
             })
         }) 
