@@ -62,6 +62,17 @@ class ModalidadModel {
             })
         })
     }
+    poder_inscribir(){
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT `id_modalidad`,`nombre_modalidad`,`id_categoria`,`nombre_categoria` FROM `categorias` JOIN `modalidades` ON `id_modalidad` = `idModalidad`', function (error, results, fields) {
+                if (error) {
+                    reject(new Respuesta(500, error, error));
+                } else {
+                    resolve(results);
+                }
+            })
+        })
+    }
 }
 
 module.exports = new ModalidadModel();

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Equipos_Controller = require('../controllers/Equipos_Controller')
+const Modalidad_Controller = require('../controllers/Modalidad_Controller');
 const { checkLogin, checkAdmin } = require('../auth/auth');
 const { checkLoginView, checkAdminView, checkRootView } = require('../auth/authViews')
 
@@ -87,5 +88,40 @@ router.put('/editar_equipo/:editar',checkLogin,function (req, res, next) {
         })
     console.table(req.body)
 });
+
+/* VIEWS */
+
+router.get('/nuevoEquipo',checkLoginView, function (req, res, next) {
+    Modalidad_Controller.poder_inscribir().then((resultados) => {
+        let inscripciones = resultados
+        res.render('nuevoEquipo', { title: 'Crear un Equipo', categorias: inscripciones});
+     }).catch((error) => {
+        if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
+        else { res.status(500).send(error) }
+     })  
+ }) 
+
+ router.post('/nuevoEquipo', function (req, res, next) {
+    if(req.body.categorias){
+        if(req.body.categorias.length == 1){
+            req.body.categorias = [req.body.categorias]
+        }
+        Equipos_Controller.ingresar_equipo(req.body).then((inscripcion) => {
+            Equipos_Controller.ingresar_inscripcion(inscripcion).then(() => {
+                Equipos_Controller.ver_equipos().then((resultados) => {
+                    res.json(resultados);
+                }).catch((error) => {
+                    res.status(error.codigo).send(error.mensaje);
+                })
+            }).catch((error) => {
+                res.status(error.codigo).send(error.mensaje);
+            })
+        }).catch((error) => {
+            res.status(error.codigo).send(error.mensaje);
+        })
+    }else{
+        res.status(400).send("Inscribete en alguna categoría")
+    }
+ }) 
 
 module.exports = router; 
