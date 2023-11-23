@@ -42,7 +42,7 @@ router.delete('/:index',checkAdmin, function (req, res, next) {
 
 
 /*Ver padrinos*/
-router.get('/padrinos', function (req, res, next) {
+router.get('/padrinos',checkAdmin, function (req, res, next) {
     Equipos_Controller.ver_padrinos().then((resultados) => {
         res.json(resultados);
     }).catch((error) => {
@@ -50,7 +50,8 @@ router.get('/padrinos', function (req, res, next) {
     })
 });
 
-router.delete('/sin_categoria/:index/:index2', function (req, res, next) {
+/*Eliminar categoria inscrita*/ 
+router.delete('/sin_categoria/:index/:index2',checkLogin,function (req, res, next) {
     Equipos_Controller.eliminar_categoria_inscrita(req.params.index, req.params.index2).then((resultados) => {
         res.status(resultados.codigo).send(resultados.mensaje);
     }).catch((error) => {
