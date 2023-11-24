@@ -101,7 +101,7 @@ router.get('/nuevoEquipo', checkLoginView, function (req, res, next) {
     })
 })
 
-router.post('/nuevoEquipo', function (req, res, next) {
+router.post('/nuevoEquipo', checkLoginView, function (req, res, next) {
     if (req.body.categorias) {
         if (req.body.categorias.length == 1) {
             req.body.categorias = [req.body.categorias]
