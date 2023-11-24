@@ -58,3 +58,9 @@ a{
 .main_nav ul li a:hover {
     text-decoration:underline;
 }
+
+#welcome{
+    text-decoration: none;
+    color: #000;
+    user-select: none;
+}
