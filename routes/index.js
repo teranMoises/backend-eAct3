@@ -32,7 +32,8 @@ router.post('/home/login', function(req, res, next) {
     res.cookie("jwt", token.token, {maxAge: 3600000})
     res.send("Bienvenido")
   }).catch((error)=>{
-    res.status(error).send(error)
+    if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje)
+    }else{res.status(500).send(error)}
   })
 });
 
