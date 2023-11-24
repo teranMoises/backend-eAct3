@@ -2,13 +2,14 @@ const connection = require('../config/conexion');
 const { Respuesta, validarClass } = require('./metodos');
 
 class Equipo {
-    constructor(representante, email, telefono, nombre_de_equipo, participantes, comentario) {
+    constructor(representante, email, telefono, nombre_de_equipo, participantes, comentario, idtok) {
         this.representante = representante;
         this.email = email;
         this.telefono = telefono;
         this.nombre_de_equipo = nombre_de_equipo;
         this.participantes = participantes;
-        this.comentario = comentario
+        this.comentario = comentario;
+        this.id_user = idtok;
     }
 }
 
@@ -68,6 +69,21 @@ class EquipoModel {
             })
         })
     }
+    seleccionarEquipoByID() {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT `id_equipo` AS ID, `nombre_de_equipo`, `representante`, `email`, `telefono`,  `participantes`, `comentario` FROM `equipos`', function (err, rows, fields) {
+                if (err) {
+                    reject(err)
+                } else {
+                    if (rows.length == 0) {
+                        resolve(null)
+                    } else {
+                        resolve(rows)
+                    }
+                }
+            })
+        })
+    }
     ver_padrinos() {
         return new Promise((resolve, reject) => {
             connection.query('SELECT `id_equipo`,`representante`,`participantes`,`nombre_de_equipo`,`id_patrocinador`, `nombre_comercial`, `persona_de_contacto` FROM `padrinos` JOIN `equipos` ON `id_equipo` = `idEquipo` JOIN `patrocinadores` ON `id_patrocinador` = `idPatrocinador`', function (err, rows, fields) {
@@ -93,7 +109,7 @@ class EquipoModel {
     }
     ingresar_equipo(equipo) {
         return new Promise((resolve, reject) => {
-            let Nuevo_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario);
+            let Nuevo_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario, equipo.id_user);
             if (validarClass(Nuevo_equipo, reject, ["comentario"], 400) !== true) return;
             connection.query('INSERT INTO `equipos` SET ?', Nuevo_equipo, function (err, rows, fields) {
                 if (err) {
