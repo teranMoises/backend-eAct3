@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const Modalidad_Controller = require('../controllers/Modalidad_Controller');
 const { checkLogin, checkAdmin, checkRoot, checkDatetime } = require('../auth/auth');
+const { checkAdminView } = require('../auth/authViews');
 
 /* GET modalidades */
 router.get('/', function (req, res, next) {
@@ -34,10 +35,10 @@ router.get('/ver', function (req, res, next) {
     })
 });
 
-router.get('/nuevaModalidad', function (req, res, next) {
+router.get('/nuevaModalidad', checkAdminView, function (req, res, next) {
     Modalidad_Controller.ver_modalidad().then((resultados) => {
         let nombre_modalidad = resultados;
-        res.render('nuevaModalidad', { title: 'Crear una Modalidad', nombre_modalidad: nombre_modalidad });
+        res.render('./viewsModalidades/nuevaModalidad', { title: 'Crear una Modalidad', nombre_modalidad: nombre_modalidad });
     }).catch((error) => {
         if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
         else { res.status(500).send(error) }
@@ -45,11 +46,11 @@ router.get('/nuevaModalidad', function (req, res, next) {
 
 });
 /* VIEWS POST */
-router.post('/nuevaModalidad', function (req, res, next) {
+router.post('/nuevaModalidad', checkAdminView, function (req, res, next) {
     //console.log('en routes', req.body);
     Modalidad_Controller.ingresar_modalidad(req.body)
         .then((resultados) => {
-            res.send(resultados.resultado);
+            res.redirect('./ver')
         })
         .catch((error) => {
             res.status(error.codigo).send(error.mensaje);

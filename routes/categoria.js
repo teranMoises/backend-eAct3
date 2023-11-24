@@ -91,7 +91,7 @@ router.get('/nuevaCategoria', checkAdminView,function(req,res, next){
     Modalidad_Controller.ver_modalidad()
     .then((resultados) => {
         let modalidades = resultados.mensaje
-        res.render('nuevaCategoria',{title: 'Crear una Categoría', modalidades: modalidades});
+        res.render('./viewsCategorias/nuevaCategoria',{title: 'Crear una Categoría', modalidades: modalidades});
     })
     .catch((error) => {
         res.status(error.codigo).send(error.mensaje);
@@ -101,13 +101,20 @@ router.get('/nuevaCategoria', checkAdminView,function(req,res, next){
 router.post('/nuevaCategoria', checkAdminView, function (req, res, next) {
     Categoria_Controller.ingresar_categoria(req.body)
     .then(() => {
-        Categoria_Controller.ver_categorias()
-            .then((resultados) => {
-                res.json(resultados);
-            })
-            .catch((error) => {
-                res.status(error.codigo).send(error.mensaje);
-            })
+        Modalidad_Controller.ver_modalidadYcat_viewsPublic().then((resultados) => {
+            //console.log(resultados)
+            res.render('./viewsModalidades/verModalidades', {
+                title: 'Modalidades y Categorías',
+                tabla: resultados,
+                subtitulos: "nombre_modalidad",
+                array: "Categorias",
+                subtitulos2: "nombre_categoria"
+            });
+        }).catch((error) => {
+            if (error.codigo && error.mensaje && error.mensaje.sqlMessage) { res.render('error', { message: error.mensaje.sqlMessage, error: { status: error.codigo } }) }
+            else if (error.codigo && error.mensaje) { res.render('error', { message: error.mensaje, error: { status: error.codigo } }) }
+            else { res.status(500).send(error) }
+        })
     })
     .catch((error) => {
         res.status(error.codigo).send(error.mensaje);
