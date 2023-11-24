@@ -31,12 +31,13 @@ router.post('/home/login', function(req, res, next) {
   //res.render('./userViews/login', { title: 'Express' });
   let data = req.body;
   let decoded = decodificar(req.cookies.jwt);
-  UsuarioController.login(req.body).then((token)=>{ 
-    res.cookie("jwt", token.token, {maxAge: 3600000})
-    res.render('../views/userViews/UserHome', {user: decoded.nombre})
-  }).catch((error)=>{
-    if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje)
-    }else{res.status(500).send(error)}
+  UsuarioController.login(req.body).then((token) => {
+    res.cookie("jwt", token.token, { maxAge: 3600000 })
+    res.render('../views/userViews/UserHome', { user: token.nombre_usuario })
+  }).catch((error) => {
+    if (error.codigo && error.mensaje) {
+      res.status(error.codigo).send(error.mensaje)
+    } else { res.status(500).send(error) }
   })
 });
 
