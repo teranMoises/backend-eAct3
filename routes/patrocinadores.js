@@ -92,7 +92,7 @@ router.get('/nuevoPatrocinador', checkAdminView , function (req, res, next) {
    })
 })   
 
-router.post('/nuevoPatrocinador', function (req, res, next) {
+router.post('/nuevoPatrocinador', checkAdminView , function (req, res, next) {
    if (req.body.idPatrocinio == 5) {
       if (req.body.idEquipo) {
          Patrocinador_Controller.ingresar_patrocinador(req.body).then((resultado) => {
