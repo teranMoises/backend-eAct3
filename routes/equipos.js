@@ -76,6 +76,20 @@ router.get('/verEquipo', checkAdminView, function (req, res, next) {
     })
 });
 
+/*Ver equipos usuarioEditor*/
+
+router.get('/verEquipoUser', checkLoginView, function (req, res, next) {
+    Equipos_Controller.ver_equipos_views().then((resultados) => {
+        if (resultados == null) { res.status(404).send("No se han registrado equipos") }
+        else {
+            res.render('./viewsEquipos/verEquipos', { title: 'Equipos Participantes', tabla: resultados, subtitulos: "nombre_de_equipo" });
+        };
+    }).catch((error) => {
+        if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
+        else { res.status(500).send(error) }
+    })
+});
+
 
 /*Editar equipo*/
 router.put('/editar_equipo/:editar', checkLogin, function (req, res, next) {
