@@ -94,7 +94,7 @@ router.put('/editar_equipo/:editar', checkLogin, function (req, res, next) {
 router.get('/nuevoEquipo', checkLoginView, function (req, res, next) {
     Modalidad_Controller.poder_inscribir().then((resultados) => {
         let inscripciones = resultados
-        res.render('nuevoEquipo', { title: 'Crear un Equipo', categorias: inscripciones });
+        res.render('./viewsEquipos/nuevoEquipo', { title: 'Crear un Equipo', categorias: inscripciones });
     }).catch((error) => {
         if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
         else { res.status(500).send(error) }

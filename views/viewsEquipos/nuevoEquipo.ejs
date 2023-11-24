@@ -1,12 +1,12 @@
-<%-include("templates/header",{mainTitle:"UVM|Robotica|Equipo"})%>
+<%-include("../templates/header",{mainTitle:"UVM|Robotica|Equipo"})%>
 <head> 
   <link rel='stylesheet' href='/stylesheets/patro.css' />
   <title><%= title %></title>
 </head>
   
   <body>
-      <%-include("partials/disclaimer")%>
-      <%-include("partials/nav")%>    
+      <%-include("../partials/disclaimer")%>
+      <%-include("../partials/nav")%>    
       <% if(categorias.length != 0){  %>
         </main>
       <div class="form_container">
@@ -45,6 +45,6 @@
           <h1>Lo sentimos no hay categorías para inscribir</h1>
       <% } %>  
 
-      <%-include("partials/footer")%>
+      <%-include("../partials/footer")%>
   </body>
 </html>

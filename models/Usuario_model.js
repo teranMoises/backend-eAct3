@@ -35,6 +35,7 @@ class UsuarioModel{
     guardar_usuario(nuevo){ 
         return new Promise((resolve, reject) => { 
             //if (nuevo.rol_user) delete nuevo.rol_user; 
+            if(!nuevo.rol_usuario) nuevo.rol_usuario = "editor";
             if (!nuevo.clave_usuario) reject("Ingrese una contraseña válida");
             nuevo.clave_usuario = bcrypt.hashSync(nuevo.clave_usuario, saltRounds);
             //console.log("clave: ", nuevo.clave_usuario)
