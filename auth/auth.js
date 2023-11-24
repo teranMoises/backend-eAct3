@@ -47,8 +47,6 @@ function checkAdmin(req, res, next) {
         return res.status(403).send(['Usted no posee permisos de administrador:', Utoken]);
     };
 
-    if (Utoken.id == req.body.cedula_usuario) return res.status(403).send(['No puede cambiarse a sí mismo de rol:', Utoken]);
-
     next();
 }
 
