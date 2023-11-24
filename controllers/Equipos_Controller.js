@@ -17,7 +17,7 @@ class EquipoController {
                         let modalidad = "";
                         //console.table(resultado)
                         try {
-                            let catEqu = await Equipo_model.ver_cat_equipos(equipo.id_equipo);
+                            let catEqu = await Equipo_model.ver_cat_equipos(equipo['ID']);
                             //console.table(catEqu);
                             if (!catEqu[0].nombre_categoria || !catEqu[0].nombre_modalidad) { console.error("Error categorías/modalidad en:", equipo.nombre_de_equipo); }
                             else {
