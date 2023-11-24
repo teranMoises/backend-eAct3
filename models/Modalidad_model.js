@@ -62,7 +62,7 @@ class ModalidadModel {
             })
         })
     }
-    poder_inscribir(){
+    poder_inscribir() {
         return new Promise((resolve, reject) => {
             connection.query('SELECT `id_modalidad`,`nombre_modalidad`,`id_categoria`,`nombre_categoria` FROM `categorias` JOIN `modalidades` ON `id_modalidad` = `idModalidad`', function (error, results, fields) {
                 if (error) {
@@ -71,6 +71,24 @@ class ModalidadModel {
                     resolve(results);
                 }
             })
+        })
+    }
+    buscar_categoria_por_modalidad(id) {
+        return new Promise((resolve, reject) => {
+            if (isNaN(Number(id))) { reject(new Respuesta(400, 'Ingresó un ID inválido', id)); return }
+            connection.query('SELECT `id_categoria` AS "ID", `nombre_categoria`, `descripcion` AS "Descripción", `reglas` AS "Reglas", `premio` AS "Premio" FROM `categorias` WHERE `idModalidad` = ?', [id], function (error, results, fields) {
+                if (error) {
+                    reject(new Respuesta(500, error, error));
+                } else {
+                    if (results.length == 0) {
+                        reject(new Respuesta(404, 'No existen modalidades registradas', results));
+                    } else {
+                        resolve(new Respuesta(200, results, results));
+                    }
+                };
+
+                //console.log('models', results);
+            });
         })
     }
 }

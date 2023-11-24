@@ -17,13 +17,30 @@ router.get('/', function (req, res, next) {
         })
 });
 /* VIEWS */
-router.get('/nuevaModalidad',function(req,res, next){
-    Modalidad_Controller.ver_modalidad().then((resultados)=>{
+router.get('/ver', function (req, res, next) {
+    Modalidad_Controller.ver_modalidadYcat_viewsPublic().then((resultados) => {
+        //console.log(resultados)
+        res.render('./viewsModalidades/verModalidades', {
+            title: 'Modalidades y Categorías',
+            tabla: resultados,
+            subtitulos: "nombre_modalidad",
+            array: "Categorias",
+            subtitulos2: "nombre_categoria"
+        });
+    }).catch((error) => {
+        if (error.codigo && error.mensaje && error.mensaje.sqlMessage) { res.render('error', { message: error.mensaje.sqlMessage, error: { status: error.codigo } }) }
+        else if (error.codigo && error.mensaje) { res.render('error', { message: error.mensaje, error: { status: error.codigo } }) }
+        else { res.status(500).send(error) }
+    })
+});
+
+router.get('/nuevaModalidad', function (req, res, next) {
+    Modalidad_Controller.ver_modalidad().then((resultados) => {
         let nombre_modalidad = resultados;
-        res.render('nuevaModalidad',{title: 'Crear una Modalidad', nombre_modalidad:nombre_modalidad});
-    }).catch((error)=>{
+        res.render('nuevaModalidad', { title: 'Crear una Modalidad', nombre_modalidad: nombre_modalidad });
+    }).catch((error) => {
         if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
-        else {res.status(500).send(error)}
+        else { res.status(500).send(error) }
     })
 
 });
@@ -31,31 +48,31 @@ router.get('/nuevaModalidad',function(req,res, next){
 router.post('/nuevaModalidad', function (req, res, next) {
     //console.log('en routes', req.body);
     Modalidad_Controller.ingresar_modalidad(req.body)
-    .then((resultados) => {
-        res.send(resultados.resultado);
-    })
-    .catch((error) => {
-        res.status(error.codigo).send(error.mensaje);
-    })
+        .then((resultados) => {
+            res.send(resultados.resultado);
+        })
+        .catch((error) => {
+            res.status(error.codigo).send(error.mensaje);
+        })
 });
 router.get('/:index', function (req, res, next) {
     Modalidad_Controller.ver_modalidad_y_categoria(req.params.index)
-    .then((resultados) => {
-        res.send(resultados.resultado);
-    })
-    .catch((error) => {
-        res.status(error.codigo).send(error.mensaje);
-    })
-}); 
+        .then((resultados) => {
+            res.send(resultados.resultado);
+        })
+        .catch((error) => {
+            res.status(error.codigo).send(error.mensaje);
+        })
+});
 router.post('/', checkAdmin, function (req, res, next) {
     //console.log('en routes', req.body);
     Modalidad_Controller.ingresar_modalidad(req.body)
-    .then((resultados) => {
-        res.send(resultados.resultado);
-    })
-    .catch((error) => {
-        res.status(error.codigo).send(error.mensaje);
-    })
-});  
+        .then((resultados) => {
+            res.send(resultados.resultado);
+        })
+        .catch((error) => {
+            res.status(error.codigo).send(error.mensaje);
+        })
+});
 
 module.exports = router; 

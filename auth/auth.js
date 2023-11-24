@@ -47,8 +47,6 @@ function checkAdmin(req, res, next) {
         return res.status(403).send(['Usted no posee permisos de administrador:', Utoken]);
     };
 
-    if (Utoken.id == req.body.cedula_usuario) return res.status(403).send(['No puede cambiarse a sí mismo de rol:', Utoken]);
-
     next();
 }
 
@@ -90,4 +88,9 @@ function checkDatetime(req, res, next){
     }
 }
 
-module.exports = { checkLogin, checkAdmin, checkRoot, checkDatetime };
+function decodificar(token) {
+    token = token.replace('Bearer ', '');
+    return jwt.verify(token, process.env.JWT_SECRET);
+}
+
+module.exports = { checkLogin, checkAdmin, checkRoot, checkDatetime, decodificar };

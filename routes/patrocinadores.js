@@ -80,7 +80,7 @@ router.get('/nuevoPatrocinador', checkAdminView, function (req, res, next) {
       Equipos_Controller.ver_equipos_sin_padrino().then((equipos) => {
          let patrocinios = resultados;
          let id_equipos = equipos
-         res.render('nuevoPatrocinador', { title: 'Crear un Patrocinador', patrocinios: patrocinios, equipos: id_equipos });
+         res.render('./viewsPatrocinadores/nuevoPatrocinador', { title: 'Crear un Patrocinador', patrocinios: patrocinios, equipos: id_equipos });
       }).catch((error) => {
          if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
          else { res.status(500).send(error) }
