@@ -131,11 +131,7 @@ router.post('/nuevoEquipo', checkLoginView, function (req, res, next) {
         equipo.id_user = decoded.id
         Equipos_Controller.ingresar_equipo(equipo).then((inscripcion) => {
             Equipos_Controller.ingresar_inscripcion(inscripcion).then(() => {
-                Equipos_Controller.ver_equipos().then((resultados) => {
-                    res.json(resultados);
-                }).catch((error) => {
-                    res.status(error.codigo).send(error.mensaje);
-                })
+               res.redirect('./verEquipoUser')
             }).catch((error) => {
                 res.status(error.codigo).send(error.mensaje);
             })

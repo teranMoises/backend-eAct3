@@ -97,12 +97,7 @@ router.post('/nuevoPatrocinador', checkAdminView , function (req, res, next) {
       if (req.body.idEquipo) {
          Patrocinador_Controller.ingresar_patrocinador(req.body).then((resultado) => {
             Patrocinador_Controller.ingresar_padrino(resultado).then(() => {
-               Patrocinador_Controller.ver_patrocinador().then((resultados) => {
-                  res.json(resultados);
-               }).catch((error) => {
-                  if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
-                  else { res.status(500).send(error) }
-               })
+               res.redirect('./todos')
             }).catch((error) => {
                if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
                else { res.status(500).send(error) }
@@ -116,12 +111,7 @@ router.post('/nuevoPatrocinador', checkAdminView , function (req, res, next) {
       }
    } else {
       Patrocinador_Controller.ingresar_patrocinador(req.body).then(() => {
-         Patrocinador_Controller.ver_patrocinador().then((resultados) => {
-            res.json(resultados);
-         }).catch((error) => {
-            if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
-            else { res.status(500).send(error) }
-         })
+         res.redirect('./todos')
       }).catch((error) => {
          if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
          else { res.status(500).send(error) }

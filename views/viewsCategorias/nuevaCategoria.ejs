@@ -1,12 +1,12 @@
-<%-include("templates/header",{mainTitle:"UVM|Robotica|Categoría"})%>
+<%-include("../templates/header",{mainTitle:"UVM|Robotica|Categoría"})%>
 <head> 
   <link rel='stylesheet' href='/stylesheets/patro.css' />
 
 </head>
   
   <body>
-    <%-include("partials/disclaimer")%>
-    <%-include("partials/nav")%>
+    <%-include("../partials/disclaimer")%>
+    <%-include("../partials/nav")%>
 
     <% if(modalidades.length != 0){  %>
         <main>
@@ -46,7 +46,7 @@
         <h1>Lo sentimos no hay modalidades para crear categorías</h1>
     <% } %>  
 
-      <%-include("partials/footer")%>
+      <%-include("../partials/footer")%>
 
   </body>
 </html>

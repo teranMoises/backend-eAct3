@@ -32,7 +32,7 @@
               <h2>Seleccione las categorías en las que va a competir</h2>
               <div class="paType_check">
                 <%  for (let i = 0; i < categorias.length; i++) { %>
-                  <label><%= categorias[i].nombre_modalidad %> <%= categorias[i].nombre_categoria %></label>
+                  <label>Modalidad: <%= categorias[i].nombre_modalidad %> Categoría: <%= categorias[i].nombre_categoria %></label>
                   <input type="checkbox" value="<%= categorias[i].id_categoria %>" name="categorias"><br>
                 <% } %>
               </div>
