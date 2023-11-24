@@ -69,9 +69,10 @@ class EquipoModel {
             })
         })
     }
-    seleccionarEquipoByID() {
+    seleccionarEquipoByID(id) {
         return new Promise((resolve, reject) => {
-            connection.query('SELECT `id_equipo` AS ID, `nombre_de_equipo`, `representante`, `email`, `telefono`,  `participantes`, `comentario` FROM `equipos`', function (err, rows, fields) {
+            if (isNaN(Number(id))) { reject('Ingresó un ID inválido'); return }
+            connection.query('SELECT `id_equipo` AS ID, `nombre_de_equipo`, `representante`, `email`, `telefono`,  `participantes`, `comentario` FROM `equipos` WHERE id_user = ?', [id], function (err, rows, fields) {
                 if (err) {
                     reject(err)
                 } else {
@@ -132,7 +133,7 @@ class EquipoModel {
                 connection.query('INSERT INTO `inscripciones` SET ?', Nueva_inscripcion, function (errFinal, rowsFinal, fieldsFinals) {
                     if (errFinal) {
                         reject(new Respuesta(500, errFinal, errFinal));
-                    }else if (rowsFinal) {
+                    } else if (rowsFinal) {
                         if (rowsFinal.affectedRows > 0) console.log("Inscripcion exitosa", rowsFinal.insertId);
                     }
                 })
@@ -142,7 +143,7 @@ class EquipoModel {
     }
     editar_equipo(id, equipo) {
         return new Promise((resolve, reject) => {
-            let Editar_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario);
+            let Editar_equipo = new Equipo(equipo.representante, equipo.email, equipo.telefono, equipo.nombre_de_equipo, equipo.participantes, equipo.comentario, equipo.id_user);
             if (validarClass(Editar_equipo, reject, ["comentario"], 400) !== true) return;
             connection.query('UPDATE `equipos` SET ? WHERE id_equipo = ?', [Editar_equipo, id], function (err, rows, fields) {
                 if (err) {
