@@ -90,4 +90,9 @@ function checkDatetime(req, res, next){
     }
 }
 
-module.exports = { checkLogin, checkAdmin, checkRoot, checkDatetime };
+function decodificar(token) {
+    token = token.replace('Bearer ', '');
+    return jwt.verify(token, process.env.JWT_SECRET);
+}
+
+module.exports = { checkLogin, checkAdmin, checkRoot, checkDatetime, decodificar };

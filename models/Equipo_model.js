@@ -71,7 +71,7 @@ class EquipoModel {
     }
     seleccionarEquipoByID(id) {
         return new Promise((resolve, reject) => {
-            if (isNaN(Number(id))) { reject('Ingresó un ID inválido'); return }
+            if (isNaN(Number(id))) { reject(new Respuesta(500, 'No se ingresó un ID de token válido', id)); return }
             connection.query('SELECT `id_equipo` AS ID, `nombre_de_equipo`, `representante`, `email`, `telefono`,  `participantes`, `comentario` FROM `equipos` WHERE id_user = ?', [id], function (err, rows, fields) {
                 if (err) {
                     reject(err)

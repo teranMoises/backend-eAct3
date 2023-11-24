@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const Equipos_Controller = require('../controllers/Equipos_Controller')
 const Modalidad_Controller = require('../controllers/Modalidad_Controller');
-const { checkLogin, checkAdmin } = require('../auth/auth');
+const { checkLogin, checkAdmin, decodificar } = require('../auth/auth');
 const { checkLoginView, checkAdminView, checkRootView } = require('../auth/authViews')
 
 
@@ -80,16 +80,17 @@ router.get('/verEquipo', checkAdminView, function (req, res, next) {
 /*Ver equipos usuarioEditor*/
 
 router.get('/verEquipoUser', checkLoginView, function (req, res, next) {
-    let token = req.cookies.jwt
-    token = token.replace('Bearer ', '');
-    let decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded = decodificar(req.cookies.jwt);
+    if (!decoded && isNaN(decoded.id)) { res.status(400).send("Error al leer token"); return }
+    console.log("decodificar",decoded.id)
     Equipos_Controller.seleccionarEquipoByID(decoded.id).then((resultados) => {
-        if (resultados == null) { res.status(404).send("No se han registrado equipos") }
+        if (resultados == null) { res.render('error', { message: "No se han registrado equipos con tu usuario", error: { status: 404 } }) }
         else {
             res.render('./viewsEquipos/verEquipos', { title: 'Equipos Participantes', tabla: resultados, subtitulos: "nombre_de_equipo" });
         };
     }).catch((error) => {
-        if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
+        if (error.codigo && error.mensaje && error.mensaje.sqlMessage) { res.render('error', { message: error.mensaje.sqlMessage, error: { status: error.codigo } }) }
+        else if (error.codigo && error.mensaje) { res.render('error', { message: error.mensaje, error: { status: error.codigo } }) }
         else { res.status(500).send(error) }
     })
 });
@@ -120,11 +121,15 @@ router.get('/nuevoEquipo', checkLoginView, function (req, res, next) {
 })
 
 router.post('/nuevoEquipo', checkLoginView, function (req, res, next) {
+    let decoded = decodificar(req.cookies.jwt);
+    if (!decoded && isNaN(decoded.id)) { res.status(400).send("Error al leer token"); return }
     if (req.body.categorias) {
         if (req.body.categorias.length == 1) {
             req.body.categorias = [req.body.categorias]
         }
-        Equipos_Controller.ingresar_equipo(req.body).then((inscripcion) => {
+        let equipo = req.body
+        equipo.id_user = decoded.id
+        Equipos_Controller.ingresar_equipo(equipo).then((inscripcion) => {
             Equipos_Controller.ingresar_inscripcion(inscripcion).then(() => {
                 Equipos_Controller.ver_equipos().then((resultados) => {
                     res.json(resultados);
