@@ -85,21 +85,25 @@ class UsuarioModel{
         return new Promise((resolve, reject) => { 
             //  Almacena el hash en tu base de datos de contraseña.
             actualizar.clave_usuario = bcrypt.hashSync(actualizar.clave_usuario, saltRounds);
-            connection.query('UPDATE `usuarios` SET ? WHERE `id_usuario` = ?',[actualizar, id], function(err, rows, fields) {
-                if (err){
-                    if (err.errno == 1048) reject("No ingresó nungún dato en: " + err.sqlMessage.substring(7).replace(' cannot be null', ''));
-                    reject(new Respuesta(500, err, err));
-                }else {
-                    if (rows.affectedRows < 1) {
-                        console.error('El usuario "' + id + '" no existe');
-                        reject(new Respuesta(404, 'No existe ningún usuario con el ID indicado: ' + id, rows))
-                    } else if (rows.changedRows > 0) {
-                        resolve(new Respuesta(200, "Se ha actualizado exitosamente", rows));
-                    } else {
-                        reject(new Respuesta(200, 'No se modificó el usuario "' + id + '", debido a que los datos ingresados son iguales.', rows));
+            if (actualizar.rol_usuario){
+                reject(new Respuesta(400, 'No puedes cambiarte de rol a ti mismo'))
+            }else{
+                connection.query('UPDATE `usuarios` SET ? WHERE `id_usuario` = ?',[actualizar, id], function(err, rows, fields) {
+                    if (err){
+                        if (err.errno == 1048) reject("No ingresó nungún dato en: " + err.sqlMessage.substring(7).replace(' cannot be null', ''));
+                        reject(new Respuesta(500, err, err));
+                    }else {
+                        if (rows.affectedRows < 1) {
+                            console.error('El usuario "' + id + '" no existe');
+                            reject(new Respuesta(404, 'No existe ningún usuario con el ID indicado: ' + id, rows))
+                        } else if (rows.changedRows > 0) {
+                            resolve(new Respuesta(200, "Se ha actualizado exitosamente", rows));
+                        } else {
+                            reject(new Respuesta(200, 'No se modificó el usuario "' + id + '", debido a que los datos ingresados son iguales.', rows));
+                        }
                     }
-                }
-            })
+                })
+            }
         }) 
     }
     eliminar_usuario(id){

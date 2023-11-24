@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const Categoria_Controller = require('../controllers/Categoria_Controller');
+const Modalidad_Controller = require('../controllers/Modalidad_Controller');
 const { checkLogin, checkAdmin, checkRoot, checkDatetime } = require('../auth/auth');
+const { checkLoginView, checkAdminView, checkRootView } = require('../auth/authViews')
 
 /* GET  */
 router.get('/', function (req, res, next) {
@@ -82,5 +84,34 @@ router.delete('/:index', checkAdmin, function (req, res, next) {
     }) 
 }); 
 
+
+/*VIEWS*/
+
+router.get('/nuevaCategoria', checkAdminView,function(req,res, next){
+    Modalidad_Controller.ver_modalidad()
+    .then((resultados) => {
+        let modalidades = resultados.mensaje
+        res.render('nuevaCategoria',{title: 'Crear una Categoría', modalidades: modalidades});
+    })
+    .catch((error) => {
+        res.status(error.codigo).send(error.mensaje);
+    })
+});
+
+router.post('/nuevaCategoria', checkAdminView, function (req, res, next) {
+    Categoria_Controller.ingresar_categoria(req.body)
+    .then(() => {
+        Categoria_Controller.ver_categorias()
+            .then((resultados) => {
+                res.json(resultados);
+            })
+            .catch((error) => {
+                res.status(error.codigo).send(error.mensaje);
+            })
+    })
+    .catch((error) => {
+        res.status(error.codigo).send(error.mensaje);
+    })
+});
 
 module.exports = router; 

@@ -17,7 +17,7 @@ class EquipoController {
                         let modalidad = "";
                         //console.table(resultado)
                         try {
-                            let catEqu = await Equipo_model.ver_cat_equipos(equipo.id_equipo);
+                            let catEqu = await Equipo_model.ver_cat_equipos(equipo['ID']);
                             //console.table(catEqu);
                             if (!catEqu[0].nombre_categoria || !catEqu[0].nombre_modalidad) { console.error("Error categorías/modalidad en:", equipo.nombre_de_equipo); }
                             else {
@@ -26,12 +26,12 @@ class EquipoController {
                                 }
                             }
                             modalidad = modalidad.substring(0, modalidad.length - 2);
-                            equipo.nombre_modalidad = modalidad;
-                            //console.log(equipo.nombre_modalidad);
+                            equipo.modalidad = modalidad;
+                            //console.log(equipo.modalidad);
                         } catch (error) {
                             if (error === null) {
                                 console.error("Error: el equipo '" + equipo.nombre_de_equipo + "' no tiene categorías/modalidades");
-                                equipo.nombre_modalidad = "No tiene modalidades registradas.";
+                                equipo.modalidad = "No tiene modalidades registradas.";
                             } else {
                                 console.error("Error leyendo categorías de:", equipo.nombre_de_equipo, error);
                                 //reject(error);

@@ -55,7 +55,7 @@ class EquipoModel {
     }
     ver_equipos_views() {
         return new Promise((resolve, reject) => {
-            connection.query('SELECT `id_equipo`, `nombre_de_equipo`, `representante`, `email`, `telefono`,  `participantes`, `comentario` FROM `equipos`', function (err, rows, fields) {
+            connection.query('SELECT `id_equipo` AS ID, `nombre_de_equipo`, `representante`, `email`, `telefono`,  `participantes`, `comentario` FROM `equipos`', function (err, rows, fields) {
                 if (err) {
                     reject(err)
                 } else {
