@@ -107,3 +107,18 @@ a{
     background-color: #eee;
   }
   
+  #Cerrar_sesion {
+    background-color: #ff5733; 
+    font-family: 'Open Sans', sans-serif;
+    text-decoration: none;
+    color: #000;
+    border: none;
+    width: 300px;
+    height: 50px;
+    cursor: pointer;
+  }
+
+  #Cerrar_sesion:hover {
+    background-color: #f87f65; 
+    cursor: pointer;
+  }
