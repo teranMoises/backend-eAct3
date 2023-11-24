@@ -44,7 +44,7 @@ router.post('/login', function (req, res, next) {
 });
 
 /* PUT user. */
-router.put('/:index', checkAdmin, function (req, res, next) {
+router.put('/:index', checkLogin, function (req, res, next) {
   UsuarioController.modificar_usuario(req.params.index, req.body).then((token) => {
     res.send(token)
   }).catch((error) => {
