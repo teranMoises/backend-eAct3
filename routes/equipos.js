@@ -5,6 +5,7 @@ const Modalidad_Controller = require('../controllers/Modalidad_Controller');
 const { checkLogin, checkAdmin } = require('../auth/auth');
 const { checkLoginView, checkAdminView, checkRootView } = require('../auth/authViews')
 
+
 /* GET */
 
 router.get('/', checkAdmin, function (req, res, next) {
@@ -79,7 +80,10 @@ router.get('/verEquipo', checkAdminView, function (req, res, next) {
 /*Ver equipos usuarioEditor*/
 
 router.get('/verEquipoUser', checkLoginView, function (req, res, next) {
-    Equipos_Controller.ver_equipos_views().then((resultados) => {
+    let token = req.cookies.jwt
+    token = token.replace('Bearer ', '');
+    let decoded = jwt.verify(token, process.env.JWT_SECRET);
+    Equipos_Controller.seleccionarEquipoByID(decoded.id).then((resultados) => {
         if (resultados == null) { res.status(404).send("No se han registrado equipos") }
         else {
             res.render('./viewsEquipos/verEquipos', { title: 'Equipos Participantes', tabla: resultados, subtitulos: "nombre_de_equipo" });

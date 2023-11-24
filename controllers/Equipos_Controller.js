@@ -44,6 +44,11 @@ class EquipoController {
                 .catch((error) => { reject(error) });
         })
     }
+
+    seleccionarEquipoByID(id){
+        Equipo_model.seleccionarEquipoByID(id)
+    }
+
     ver_padrinos() {
         return new Promise((resolve, reject) => {
             Equipo_model.ver_padrinos().then((resultado) => { resolve(resultado) }).catch((error) => { reject(error) });
