@@ -15,10 +15,16 @@ router.get('/home/register', function(req, res, next) {
 });
 
 router.post('/home/register', function(req, res, next) {
-  res.render('./userViews/register', { title: 'Express' });
+  //res.render('./userViews/register', { title: 'Express' });
   let data = req.body;
   if (data != null) {
-    UsuarioController.registrar_usuario(req.body).then(resultados) 
+    UsuarioController.registrar_usuario(req.body).then(() => {
+      res.render('./userViews/register', { title: 'Express' });
+    })
+    .catch((error) => {
+      if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
+      else { res.status(500).send(error) }
+    })
   }
 });
 

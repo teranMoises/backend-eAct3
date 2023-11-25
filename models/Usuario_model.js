@@ -35,6 +35,7 @@ class UsuarioModel{
     guardar_usuario(nuevo){ 
         return new Promise((resolve, reject) => { 
             //if (nuevo.rol_user) delete nuevo.rol_user; 
+            if (validarClass(nuevo, reject, [], 400) !== true) return;
             if(!nuevo.rol_usuario) nuevo.rol_usuario = "editor";
             if (!nuevo.clave_usuario) reject("Ingrese una contraseña válida");
             nuevo.clave_usuario = bcrypt.hashSync(nuevo.clave_usuario, saltRounds);
@@ -57,6 +58,7 @@ class UsuarioModel{
         return new Promise((resolve, reject) => { 
             //usuario.clave_usuario = bcrypt.hashSync(usuario.clave_usuario, saltRounds);
             //console.log(usuario.clave_usuario)
+            if (validarClass(usuario, reject, [], 400) !== true) return;
             connection.query('SELECT * FROM `usuarios` WHERE cedula_usuario = ?', usuario.cedula_usuario , function (error, results, fields) {
                 if (error) {reject(error); return};
                 if (results[0]) {
@@ -84,6 +86,7 @@ class UsuarioModel{
     }
     modificar_usuario(id, actualizar){
         return new Promise((resolve, reject) => { 
+            if (validarClass(actualizar, reject, [], 400) !== true) return;
             //  Almacena el hash en tu base de datos de contraseña.
             actualizar.clave_usuario = bcrypt.hashSync(actualizar.clave_usuario, saltRounds);
             if (actualizar.rol_usuario){
@@ -124,6 +127,7 @@ class UsuarioModel{
     }
     cambiar_rol(usuario){ 
         return new Promise((resolve, reject) => {
+            if (validarClass(usuario, reject, [], 400) !== true) return;
             connection.query('UPDATE `usuarios` SET rol_usuario = ? WHERE cedula_usuario = ?', [usuario.rol_usuario, usuario.cedula_usuario], function (error, results, fields) {
                 if (error) reject(error);
                 if (results.affectedRows > 0) {
