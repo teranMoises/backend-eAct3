@@ -79,7 +79,7 @@ class UsuarioModel{
                             reject('Clave errada');
                         }
                     }else{
-                        reject("Dato errado")
+                        reject("Dato errado");
                     }
                 } else {
                     console.log('Usuario no existe');
