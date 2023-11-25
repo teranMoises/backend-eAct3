@@ -63,19 +63,23 @@ class UsuarioModel{
                 if (error) {reject(error); return};
                 if (results[0]) {
                     console.log('consulta:', results);
-                    if (bcrypt.compareSync(usuario.clave_usuario, results[0].clave_usuario)) {
-                        //Roles
-                        let rol = 'user'
-                        if (results[0].rol_usuario) rol = results[0].rol_usuario;
+                    if(results[0].nombre_usuario == usuario.nombre_usuario){
+                        if (bcrypt.compareSync(usuario.clave_usuario, results[0].clave_usuario)) {
+                            //Roles
+                            let rol = 'user'
+                            if (results[0].rol_usuario) rol = results[0].rol_usuario;
 
-                        var token = jwt.sign({ nombre: results[0].nombre_usuario, id: results[0].cedula_usuario, rol: rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
-                        console.log(token);
-                        //results[1] = token;
-                        let retorna = { id_usuario: results[0].id_usuario , nombre_usuario: results[0].nombre_usuario, cedula_usuario: results[0].cedula_usuario, rol_usuario: results[0].rol_usuario, token: token}
-                        resolve(retorna);
-                    } else {
-                        console.log('Clave errada');
-                        reject('Clave errada');
+                            var token = jwt.sign({ nombre: results[0].nombre_usuario, id: results[0].cedula_usuario, rol: rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
+                            console.log(token);
+                            //results[1] = token;
+                            let retorna = { id_usuario: results[0].id_usuario , nombre_usuario: results[0].nombre_usuario, cedula_usuario: results[0].cedula_usuario, rol_usuario: results[0].rol_usuario, token: token}
+                            resolve(retorna);
+                        } else {
+                            console.log('Clave errada');
+                            reject('Clave errada');
+                        }
+                    }else{
+                        reject("Dato errado")
                     }
                 } else {
                     console.log('Usuario no existe');
