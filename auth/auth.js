@@ -93,4 +93,15 @@ function decodificar(token) {
     return jwt.verify(token, process.env.JWT_SECRET);
 }
 
-module.exports = { checkLogin, checkAdmin, checkRoot, checkDatetime, decodificar };
+function resDateTime(token) {
+    //let exp = new Date(token.exp * 1000);
+    //console.log("Caduca a las:", exp) 
+    if (token.exp) {
+        return token.exp;
+    } else {
+        return 0
+    }
+    
+}
+
+module.exports = { checkLogin, checkAdmin, checkRoot, checkDatetime, decodificar, resDateTime };

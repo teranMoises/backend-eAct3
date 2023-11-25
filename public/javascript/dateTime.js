@@ -1,14 +1,23 @@
-/* 
-const { checkLogin, checkAdmin, checkRoot, checkDatetime, conectado } = require('../../auth/auth');
+function tempTime(fecha = 1700868121, avisar = 3) {
+  fecha = fecha * 1000;
+  let ahora = Date.now();
+  console.log(ahora, fecha, new Date(ahora), new Date(fecha));
 
-conectado()
-console.log("HELLO ")
+  let restante = fecha - ahora;
+  let aviso = (restante / 1000 / 60).toFixed(0);
+  console.log("restante", restante, aviso, new Date(restante));
 
-let token = "Brearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21icmUiOiJFZGl0b3IiLCJpZCI6MzE5NzU2MTEsInJvbCI6ImVkaXRvciIsImlhdCI6MTcwMDY2Njk1OCwiZXhwIjoxNzAwNjcwNTU4fQ.x8mCegIVEainjHqx_RImxuXECg-BmJnLaY91ynP05iE" */
+  alert(`Su sesión caducará en ${aviso} minutos.`);
 
-setTimeout(() => {
-    alert("Su sesión caducara en 10 minutos.");
-}, "1000");
+  if ((restante - (avisar * 60 * 1000)) > 0) {
+    setTimeout(() => {
+      alert(`Su sesión caducará en ${avisar} minutos.`);
+      console.log("Faltan " + avisar + " minutos para que su seción expire");
+    }, restante - (avisar * 60 * 1000));
+  }
 
-
-  console.log("ESTOY AQUÏ")
+  setTimeout(() => {
+    alert(`Su sesión ha caducado. Sebe iniciar sesión de nuevo.`);
+    console.log("Sesión caducada.");
+  }, restante);
+}

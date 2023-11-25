@@ -1,9 +1,14 @@
 <%- include("../templates/header",{mainTitle:"UVM|Robotica|Equipos"}) %>
 <head>
   <link rel="stylesheet" href="/stylesheets/mostrar.css">
+  <script src="/javascript/dateTime.js"></script>
 </head>
 
 <body>
+  <script>
+    let fecha = <%= hora %>;
+    tempTime(fecha);
+  </script>
   <%- include("../partials/disclaimer") %>
     <%- include("../partials/nav") %>
     <main>

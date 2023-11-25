@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const Equipos_Controller = require('../controllers/Equipos_Controller')
 const Modalidad_Controller = require('../controllers/Modalidad_Controller');
-const { checkLogin, checkAdmin, decodificar } = require('../auth/auth');
+const { checkLogin, checkAdmin, decodificar, resDateTime } = require('../auth/auth');
 const { checkLoginView, checkAdminView, checkRootView } = require('../auth/authViews')
 
 
@@ -66,10 +66,12 @@ router.delete('/sin_categoria/:index/:index2', checkLogin, function (req, res, n
 /* Views */
 
 router.get('/verEquipo', checkAdminView, function (req, res, next) {
+    let timeExp = resDateTime(decodificar(req.cookies.jwt));
+    //console.log("expira",timeExp);
     Equipos_Controller.ver_equipos_views().then((resultados) => {
         if (resultados == null) { res.status(404).send("No se han registrado equipos") }
         else {
-            res.render('./viewsEquipos/verEquipos', { title: 'Equipos Participantes', tabla: resultados, subtitulos: "nombre_de_equipo" });
+            res.render('./viewsEquipos/verEquipos', { title: 'Equipos Participantes', tabla: resultados, subtitulos: "nombre_de_equipo", hora: timeExp });
         };
     }).catch((error) => {
         if (error.codigo && error.mensaje) { res.status(error.codigo).send(error.mensaje) }
@@ -82,7 +84,7 @@ router.get('/verEquipo', checkAdminView, function (req, res, next) {
 router.get('/verEquipoUser', checkLoginView, function (req, res, next) {
     let decoded = decodificar(req.cookies.jwt);
     if (!decoded && isNaN(decoded.id)) { res.status(400).send("Error al leer token"); return }
-    console.log("decodificar",decoded.id)
+    console.log("decodificar", decoded.id)
     Equipos_Controller.seleccionarEquipoByID(decoded.id).then((resultados) => {
         if (resultados == null) { res.render('error', { message: "No se han registrado equipos con tu usuario", error: { status: 404 } }) }
         else {
@@ -131,7 +133,7 @@ router.post('/nuevoEquipo', checkLoginView, function (req, res, next) {
         equipo.id_user = decoded.id
         Equipos_Controller.ingresar_equipo(equipo).then((inscripcion) => {
             Equipos_Controller.ingresar_inscripcion(inscripcion).then(() => {
-               res.redirect('./verEquipoUser')
+                res.redirect('./verEquipoUser')
             }).catch((error) => {
                 res.status(error.codigo).send(error.mensaje);
             })
