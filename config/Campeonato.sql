@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 21-11-2023 a las 23:03:28
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 24-11-2023 a las 16:38:40
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `campeonato`
+-- Base de datos: `concurso_3`
 --
 
 -- --------------------------------------------------------
@@ -54,6 +54,7 @@ INSERT INTO `categorias` (`id_categoria`, `idModalidad`, `nombre_categoria`, `de
 
 CREATE TABLE `equipos` (
   `id_equipo` int(13) NOT NULL,
+  `id_user` int(8) NOT NULL,
   `representante` varchar(30) NOT NULL,
   `email` varchar(30) NOT NULL,
   `telefono` varchar(15) NOT NULL,
@@ -66,17 +67,17 @@ CREATE TABLE `equipos` (
 -- Volcado de datos para la tabla `equipos`
 --
 
-INSERT INTO `equipos` (`id_equipo`, `representante`, `email`, `telefono`, `nombre_de_equipo`, `participantes`, `comentario`) VALUES
-(1, 'Rodrigo', 'rodri@gmail.com', '0414-1234567', 'Ingenieros roboticos', 'Rodrigo,Jesus,Luis,María', 'Buena suerte a todos'),
-(2, 'Pauline', 'p4u123@gmail.com', '0414-1114567', 'Ideas productivas', 'Pauline,Liliana,Antony', ''),
-(3, 'Miguel', 'M1key9090@gmail.com', '0412-7544567', 'Robots de la suerte', 'Miguel,Orlando', ''),
-(4, 'Angelo', 'Anyel@gmail.com', '0412-7227321', 'inventores', 'Angelo,Olivia', ''),
-(6, 'Fred', 'FredJhon@gmail.com', '0412-1217321', 'dúo dinamico', 'Fred,Teresa', ''),
-(7, 'Jose', 'JoseYosh@gmail.com', '0412-1111321', 'trio alucinante', 'Jose,Susi,Louisa', ''),
-(18, 'Ana', 'anita86@gmail.com', '0414-1112321', 'hermanos ingenieros', 'Ana,Marcus', ''),
-(19, 'Cristin', 'kyky@gmail.com', '0412-1114421', 'DoubleTrouble', 'Cristin,Camila', ''),
-(20, 'Henry', 'henrystein@gmail.com', '0412-4517891', 'El trío', 'Henry,Joey,William', ''),
-(21, 'Audrey', 'AudreyRo@gmail.com', '0414-9919891', 'AATwins', 'Audrey, Alison', '');
+INSERT INTO `equipos` (`id_equipo`, `id_user`, `representante`, `email`, `telefono`, `nombre_de_equipo`, `participantes`, `comentario`) VALUES
+(1, 30975611, 'Rodrigo', 'rodri@gmail.com', '0414-1234567', 'Ingenieros roboticos', 'Rodrigo,Jesus,Luis,María', 'Buena suerte a todos'),
+(2, 30975611, 'Pauline', 'p4u123@gmail.com', '0414-1114567', 'Ideas productivas', 'Pauline,Liliana,Antony', ''),
+(3, 31975611, 'Miguel', 'M1key9090@gmail.com', '0412-7544567', 'Robots de la suerte', 'Miguel,Orlando', ''),
+(4, 31975611, 'Angelo', 'Anyel@gmail.com', '0412-7227321', 'inventores', 'Angelo,Olivia', ''),
+(6, 30975611, 'Fred', 'FredJhon@gmail.com', '0412-1217321', 'dúo dinamico', 'Fred,Teresa', ''),
+(7, 30975611, 'Jose', 'JoseYosh@gmail.com', '0412-1111321', 'trio alucinante', 'Jose,Susi,Louisa', ''),
+(18, 30975611, 'Ana', 'anita86@gmail.com', '0414-1112321', 'hermanos ingenieros', 'Ana,Marcus', ''),
+(19, 30975611, 'Cristin', 'kyky@gmail.com', '0412-1114421', 'DoubleTrouble', 'Cristin,Camila', ''),
+(20, 30975611, 'Henry', 'henrystein@gmail.com', '0412-4517891', 'El trío', 'Henry,Joey,William', ''),
+(21, 30975611, 'Audrey', 'AudreyRo@gmail.com', '0414-9919891', 'AATwins', 'Audrey, Alison', '');
 
 -- --------------------------------------------------------
 
@@ -212,18 +213,6 @@ INSERT INTO `patrocinios` (`id_patrocinio`, `nombre_patrocinio`, `monto`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `sesiones`
---
-
-CREATE TABLE `sesiones` (
-  `id_sesion` int(13) NOT NULL,
-  `idUsuario` int(13) NOT NULL,
-  `fecha_de_caducidad` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -232,16 +221,18 @@ CREATE TABLE `usuarios` (
   `cedula_usuario` int(8) NOT NULL,
   `nombre_usuario` varchar(30) NOT NULL,
   `clave_usuario` varchar(60) NOT NULL,
-  `rol_usuario` varchar(30) NOT NULL
+  `rol_usuario` varchar(30) NOT NULL,
+  `correo_usuario` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `cedula_usuario`, `nombre_usuario`, `clave_usuario`, `rol_usuario`) VALUES
-(1, 30975611, 'Admin', '$2b$10$2W5mM5eVKMWjbUlmGBOpzOSMH1DsOrp6dzFKUhJ8ZyAX8f2LgC5Fq', 'admin'),
-(2, 31975611, 'Editor', '$2b$10$6GbZre.MDZf1ColrctMUK.ARvZdxIEQwQdGY8kmtfGm8RAf6YfdUu', 'editor');
+INSERT INTO `usuarios` (`id_usuario`, `cedula_usuario`, `nombre_usuario`, `clave_usuario`, `rol_usuario`, `correo_usuario`) VALUES
+(1, 30975611, 'Admin', '$2b$10$2W5mM5eVKMWjbUlmGBOpzOSMH1DsOrp6dzFKUhJ8ZyAX8f2LgC5Fq', 'admin', ''),
+(2, 31975611, 'Editor', '$2b$10$6GbZre.MDZf1ColrctMUK.ARvZdxIEQwQdGY8kmtfGm8RAf6YfdUu', 'editor', ''),
+(4, 0, 'Root', '$2b$10$xnqX1SCHU7Yky4g5D/O4KOpbTZQaZGwH85FBI2xp0uyZ0v/8diSOm', 'root', '');
 
 --
 -- Índices para tablas volcadas
@@ -260,7 +251,8 @@ ALTER TABLE `categorias`
 --
 ALTER TABLE `equipos`
   ADD PRIMARY KEY (`id_equipo`),
-  ADD UNIQUE KEY `nombre_de_equipo` (`nombre_de_equipo`);
+  ADD UNIQUE KEY `nombre_de_equipo` (`nombre_de_equipo`),
+  ADD KEY `id_user` (`id_user`);
 
 --
 -- Indices de la tabla `inscripciones`
@@ -299,13 +291,6 @@ ALTER TABLE `patrocinadores`
 ALTER TABLE `patrocinios`
   ADD PRIMARY KEY (`id_patrocinio`),
   ADD UNIQUE KEY `nombre_patrocinio` (`nombre_patrocinio`);
-
---
--- Indices de la tabla `sesiones`
---
-ALTER TABLE `sesiones`
-  ADD PRIMARY KEY (`id_sesion`),
-  ADD KEY `idUsuario` (`idUsuario`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -361,16 +346,10 @@ ALTER TABLE `patrocinios`
   MODIFY `id_patrocinio` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `sesiones`
---
-ALTER TABLE `sesiones`
-  MODIFY `id_sesion` int(13) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_usuario` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
@@ -381,6 +360,12 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `categorias`
   ADD CONSTRAINT `idModalidad` FOREIGN KEY (`idModalidad`) REFERENCES `modalidades` (`id_modalidad`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `equipos`
+--
+ALTER TABLE `equipos`
+  ADD CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `usuarios` (`cedula_usuario`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `inscripciones`
@@ -401,12 +386,6 @@ ALTER TABLE `padrinos`
 --
 ALTER TABLE `patrocinadores`
   ADD CONSTRAINT `idPatrocinio` FOREIGN KEY (`idPatrocinio`) REFERENCES `patrocinios` (`id_patrocinio`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `sesiones`
---
-ALTER TABLE `sesiones`
-  ADD CONSTRAINT `idUsuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
